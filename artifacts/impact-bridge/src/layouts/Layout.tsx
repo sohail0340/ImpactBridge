@@ -36,7 +36,7 @@ export function Layout({ children }: LayoutProps) {
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-white/10 text-center text-xs">
-            2024 ImpactBridge. Built for communities that care.
+            © 2026 ImpactBridge. Built by <span className="text-primary font-medium">Learndev</span> — Sohail Ahmad &amp; Haris Ahmad.
           </div>
         </div>
       </footer>
