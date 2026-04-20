@@ -64,69 +64,99 @@ export function Home() {
           style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "32px 32px" }}
         />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-sm font-medium mb-6">
-              <TrendingUp className="w-3.5 h-3.5" />
-              {stats ? `${stats.problemsSolved} problems solved so far` : "Making impact together"}
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 tracking-tight">
-              Stop Waiting for <span className="text-primary">Someone.</span>
-              <br />
-              Be the Someone.
-            </h1>
-            <p className="text-base md:text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl">
-              Report problems, gather people, track real impact.
-              <br />
-              <span className="text-slate-400 text-sm md:text-base">Your community needs you — and now it has you.</span>
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/create"
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
-              >
-                Report a Problem
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/explore"
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition-all"
-              >
-                Explore Issues
-              </Link>
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            {/* Left: text */}
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-sm font-medium mb-6">
+                <TrendingUp className="w-3.5 h-3.5" />
+                {stats ? `${stats.problemsSolved} problems solved so far` : "Making impact together"}
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 tracking-tight">
+                Stop Waiting for <span className="text-primary">Someone.</span>
+                <br />
+                Be the Someone.
+              </h1>
+              <p className="text-base md:text-lg text-slate-300 mb-8 leading-relaxed max-w-2xl">
+                Report problems, gather people, track real impact.
+                <br />
+                <span className="text-slate-400 text-sm md:text-base">Your community needs you — and now it has you.</span>
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/create"
+                  className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
+                >
+                  Report a Problem
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/explore"
+                  className="inline-flex items-center gap-2 px-7 py-3 rounded-xl border border-white/20 text-white font-semibold hover:bg-white/10 transition-all"
+                >
+                  Explore Issues
+                </Link>
+              </div>
+
+              {stats && (
+                <div className="flex flex-wrap gap-8 mt-12 pt-6 border-t border-white/10">
+                  <div>
+                    <div className="text-3xl font-bold text-primary">
+                      <AnimatedCounter value={stats.totalProblems} />+
+                    </div>
+                    <div className="text-slate-400 text-sm mt-1">Problems reported</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-primary">
+                      Rs.{" "}
+                      <AnimatedCounter
+                        value={stats.totalFundingRaised}
+                        format={(n) => `${(n / 100000).toFixed(1)}L`}
+                      />+
+                    </div>
+                    <div className="text-slate-400 text-sm mt-1">Funds raised</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-primary">
+                      <AnimatedCounter value={stats.volunteersJoined} />+
+                    </div>
+                    <div className="text-slate-400 text-sm mt-1">Volunteers active</div>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-primary">
+                      <AnimatedCounter value={stats.activeCommunities} />
+                    </div>
+                    <div className="text-slate-400 text-sm mt-1">Active communities</div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {stats && (
-              <div className="flex flex-wrap gap-8 mt-12 pt-6 border-t border-white/10">
-                <div>
-                  <div className="text-3xl font-bold text-primary">
-                    <AnimatedCounter value={stats.totalProblems} />+
+            {/* Right: hero visual */}
+            <div className="hidden lg:flex flex-shrink-0 w-[420px] xl:w-[480px]">
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                <img
+                  src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=900&q=85&auto=format&fit=crop"
+                  alt="Community members collaborating to solve local problems"
+                  className="w-full h-[340px] xl:h-[380px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex -space-x-2">
+                      {["🧑‍🤝‍🧑","👩","👨","👧"].map((e, i) => (
+                        <div key={i} className="w-8 h-8 rounded-full bg-primary/80 border-2 border-white/20 flex items-center justify-center text-sm">
+                          {e}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <div className="text-white text-sm font-semibold">1,247+ volunteers active</div>
+                      <div className="text-slate-300 text-xs">across 5 communities</div>
+                    </div>
                   </div>
-                  <div className="text-slate-400 text-sm mt-1">Problems reported</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-primary">
-                    Rs.{" "}
-                    <AnimatedCounter
-                      value={stats.totalFundingRaised}
-                      format={(n) => `${(n / 100000).toFixed(1)}L`}
-                    />+
-                  </div>
-                  <div className="text-slate-400 text-sm mt-1">Funds raised</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-primary">
-                    <AnimatedCounter value={stats.volunteersJoined} />+
-                  </div>
-                  <div className="text-slate-400 text-sm mt-1">Volunteers active</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-primary">
-                    <AnimatedCounter value={stats.activeCommunities} />
-                  </div>
-                  <div className="text-slate-400 text-sm mt-1">Active communities</div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
