@@ -1,0 +1,278 @@
+Build a complete Admin Panel system for this current website 
+---
+
+🎯 CORE OBJECTIVE
+
+- Connect people into communities
+- Allow users to post problems
+- Allow NGOs to participate
+- Ensure trust using approval system
+- Only approved data should be visible publicly
+
+---
+
+👥 USER TYPES
+
+Support two types of users:
+1. Normal User
+2. NGO (requires verification)
+
+---
+
+🧾 SIGNUP SYSTEM
+
+All users register with:
+
+- name
+- email
+- password
+- type (user / NGO)
+
+NGO must also provide:
+
+- organizationName
+- registrationNumber
+- description
+- document upload
+
+---
+
+🔒 APPROVAL SYSTEM (VERY IMPORTANT)
+
+Every new user must have:
+
+status = "pending"
+
+Admin actions:
+
+- Approve → status = "approved"
+- Reject → status = "rejected"
+
+---
+
+RULES:
+
+- ONLY approved users can:
+  - login
+  - join communities
+  - apply as solver
+  - appear on frontend
+
+---
+
+📌 PROBLEM APPROVAL SYSTEM
+
+When a user creates a problem:
+
+status = "pending"
+
+Admin must:
+
+- Approve → problem visible on Explore page
+- Reject → hidden
+
+---
+
+🧑‍🤝‍🧑 COMMUNITY SYSTEM
+
+Each problem has a community.
+
+Track and display:
+
+- Members list
+- Activity logs like:
+  - “Hassan joined”
+  - “Shayan joined”
+
+---
+
+💰 TRANSACTION SYSTEM
+
+Track donations:
+
+- userId
+- problemId
+- amount
+- date
+
+Admin panel must display:
+
+- who donated
+- amount
+- which problem
+
+---
+
+🧱 ADMIN PANEL PAGES
+
+1. Dashboard
+
+Show:
+
+- Total Users
+- Total NGOs
+- Total Problems
+- Total Communities
+- Total Transactions
+- Pending Approvals
+
+---
+
+2. Users Management
+
+Table columns:
+
+- Name
+- Email
+- Type (User / NGO)
+- Status (Pending / Approved / Rejected)
+
+Actions:
+
+- Approve
+- Reject
+
+---
+
+3. NGO Verification Page
+
+Show full NGO details:
+
+- Organization Name
+- Registration Number
+- Description
+- Uploaded Document
+
+Actions:
+
+- Approve NGO
+- Reject NGO
+
+---
+
+4. Problems Management
+
+Table:
+
+- Title
+- Location
+- Created By
+- Status
+
+Click to open full details
+
+Actions:
+
+- Approve
+- Reject
+
+---
+
+5. Communities Management
+
+Show:
+
+- Problem name
+- Members count
+- Activity logs (joined users)
+
+---
+
+6. Transactions Management
+
+Table:
+
+- User
+- Amount
+- Problem
+- Date
+
+---
+
+⚙️ DATABASE MODELS
+
+User Model:
+
+- name
+- email
+- password
+- type (user / NGO)
+- status (pending / approved / rejected)
+
+NGO fields included
+
+---
+
+Problem Model:
+
+- title
+- description
+- location
+- images
+- createdBy
+- status (pending / approved / rejected)
+
+---
+
+Community Model:
+
+- problemId
+- members (array of users)
+- activityLogs (array of messages like “user joined”)
+
+---
+
+Transaction Model:
+
+- userId
+- problemId
+- amount
+- date
+
+---
+
+🔐 SECURITY
+
+- Protect admin routes with authentication
+- Only admin can approve/reject
+- Only approved data visible on frontend
+
+---
+
+🎨 ADMIN UI DESIGN
+
+- Sidebar layout:
+  Dashboard / Users / NGOs / Problems / Communities / Transactions
+
+- Table-based UI
+
+- Status badges:
+  
+  - Pending (yellow)
+  - Approved (green)
+  - Rejected (red)
+
+- Buttons:
+  
+  - Approve (green)
+  - Reject (red)
+
+---
+
+🔥 EXTRA FEATURES
+
+- Search and filter in tables
+- Filter by status (pending/approved/rejected)
+- Toast notifications on actions
+- Live activity logs
+
+---
+
+⚡ FINAL EXPECTATION
+
+- Fully working admin panel
+- Backend APIs integrated
+- Approval system functional
+- Clean and scalable code
+
+Do NOT simplify. Build a real-world production-style system.

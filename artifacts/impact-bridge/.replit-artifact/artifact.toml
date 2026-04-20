@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ImpactBridge"
+version = "1.0.0"
+id = "artifacts/impact-bridge"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18227
+
+[services.development]
+run = "pnpm --filter @workspace/impact-bridge run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/impact-bridge", "run", "build" ]
+publicDir = "artifacts/impact-bridge/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18227"
+BASE_PATH = "/"

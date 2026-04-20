@@ -1,0 +1,923 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: ImpactBridge API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: problems
+    description: Community problems
+  - name: users
+    description: User profiles
+  - name: contributions
+    description: Funding contributions
+  - name: comments
+    description: Problem comments
+  - name: updates
+    description: Problem progress updates
+  - name: community
+    description: Community groups and tasks
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /problems:
+    get:
+      operationId: listProblems
+      tags: [problems]
+      summary: List all problems
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [newest, most_funded, most_urgent]
+      responses:
+        "200":
+          description: List of problems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Problem"
+    post:
+      operationId: createProblem
+      tags: [problems]
+      summary: Create a new problem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProblemBody"
+      responses:
+        "201":
+          description: Problem created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+
+  /problems/{id}:
+    get:
+      operationId: getProblem
+      tags: [problems]
+      summary: Get problem by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Problem detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: Not found
+
+  /problems/{id}/join:
+    post:
+      operationId: joinProblem
+      tags: [problems]
+      summary: Join a problem community
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Joined successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /problems/{id}/vote:
+    post:
+      operationId: voteProblem
+      tags: [problems]
+      summary: Vote on a problem (verify)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoteBody"
+      responses:
+        "200":
+          description: Vote recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /problems/{id}/updates:
+    get:
+      operationId: getProblemUpdates
+      tags: [updates]
+      summary: Get timeline updates for a problem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of updates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Update"
+    post:
+      operationId: createProblemUpdate
+      tags: [updates]
+      summary: Add a progress update to a problem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUpdateBody"
+      responses:
+        "201":
+          description: Update created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Update"
+
+  /problems/{id}/comments:
+    get:
+      operationId: getProblemComments
+      tags: [comments]
+      summary: Get comments for a problem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+    post:
+      operationId: createComment
+      tags: [comments]
+      summary: Add a comment to a problem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommentBody"
+      responses:
+        "201":
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+
+  /contributions:
+    get:
+      operationId: listContributions
+      tags: [contributions]
+      summary: List contributions (for current user)
+      responses:
+        "200":
+          description: List of contributions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contribution"
+    post:
+      operationId: createContribution
+      tags: [contributions]
+      summary: Make a contribution to a problem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContributionBody"
+      responses:
+        "201":
+          description: Contribution recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contribution"
+
+  /users/me:
+    get:
+      operationId: getCurrentUser
+      tags: [users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user profile by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [users]
+      summary: Get dashboard stats for current user
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /community/groups:
+    get:
+      operationId: listCommunityGroups
+      tags: [community]
+      summary: List active community groups
+      responses:
+        "200":
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommunityGroup"
+
+  /community/tasks:
+    get:
+      operationId: listCommunityTasks
+      tags: [community]
+      summary: List community tasks
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommunityTask"
+
+  /community/groups/{id}/messages:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: listCommunityGroupMessages
+      tags: [community]
+      summary: List chat messages for a community (members only)
+      responses:
+        "200":
+          description: List of messages (oldest first)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommunityMessage"
+        "403":
+          description: Caller is not a member of this community
+        "404":
+          description: Community not found
+    post:
+      operationId: postCommunityGroupMessage
+      tags: [community]
+      summary: Post a chat message to a community (members only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+              required:
+                - message
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunityMessage"
+        "403":
+          description: Caller is not a member of this community
+        "404":
+          description: Community not found
+
+  /community/groups/{id}/join:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: joinCommunityGroup
+      tags: [community]
+      summary: Join a community
+      responses:
+        "200":
+          description: Already a member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipResult"
+        "201":
+          description: Newly joined
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipResult"
+        "404":
+          description: Community not found
+    delete:
+      operationId: leaveCommunityGroup
+      tags: [community]
+      summary: Leave a community
+      responses:
+        "200":
+          description: Left (or was not a member)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipResult"
+        "404":
+          description: Community not found
+
+  /stats/overview:
+    get:
+      operationId: getOverviewStats
+      tags: [problems]
+      summary: Get platform overview stats (for hero section)
+      responses:
+        "200":
+          description: Overview statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OverviewStats"
+
+  /problems/featured:
+    get:
+      operationId: getFeaturedProblems
+      tags: [problems]
+      summary: Get featured problems for homepage
+      responses:
+        "200":
+          description: Featured problems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Problem"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Problem:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        status:
+          type: string
+          enum: [reported, community_joined, funding_started, in_progress, completed]
+        imageUrl:
+          type: string
+        fundingGoal:
+          type: number
+        fundingRaised:
+          type: number
+        progressPercent:
+          type: number
+        joinedCount:
+          type: integer
+        createdAt:
+          type: string
+        postedBy:
+          type: string
+        postedByAvatar:
+          type: string
+        urgency:
+          type: string
+          enum: [low, medium, high, critical]
+        verifiedCount:
+          type: integer
+      required:
+        - id
+        - title
+        - description
+        - category
+        - location
+        - status
+        - fundingGoal
+        - fundingRaised
+        - progressPercent
+        - joinedCount
+        - createdAt
+        - postedBy
+        - urgency
+
+    ProblemDetail:
+      allOf:
+        - $ref: "#/components/schemas/Problem"
+        - type: object
+          properties:
+            images:
+              type: array
+              items:
+                type: string
+            updates:
+              type: array
+              items:
+                $ref: "#/components/schemas/Update"
+            comments:
+              type: array
+              items:
+                $ref: "#/components/schemas/Comment"
+            joinedUsers:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserSummary"
+
+    CreateProblemBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        imageUrl:
+          type: string
+        fundingGoal:
+          type: number
+        urgency:
+          type: string
+      required:
+        - title
+        - description
+        - category
+        - location
+        - fundingGoal
+
+    Update:
+      type: object
+      properties:
+        id:
+          type: integer
+        problemId:
+          type: integer
+        content:
+          type: string
+        author:
+          type: string
+        authorAvatar:
+          type: string
+        createdAt:
+          type: string
+        imageUrl:
+          type: string
+      required:
+        - id
+        - problemId
+        - content
+        - author
+        - createdAt
+
+    CreateUpdateBody:
+      type: object
+      properties:
+        content:
+          type: string
+        imageUrl:
+          type: string
+      required:
+        - content
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        problemId:
+          type: integer
+        content:
+          type: string
+        author:
+          type: string
+        authorAvatar:
+          type: string
+        createdAt:
+          type: string
+        likes:
+          type: integer
+      required:
+        - id
+        - problemId
+        - content
+        - author
+        - createdAt
+
+    CreateCommentBody:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+
+    Contribution:
+      type: object
+      properties:
+        id:
+          type: integer
+        problemId:
+          type: integer
+        problemTitle:
+          type: string
+        amount:
+          type: number
+        userId:
+          type: integer
+        createdAt:
+          type: string
+        anonymous:
+          type: boolean
+      required:
+        - id
+        - problemId
+        - problemTitle
+        - amount
+        - userId
+        - createdAt
+
+    CreateContributionBody:
+      type: object
+      properties:
+        problemId:
+          type: integer
+        amount:
+          type: number
+        anonymous:
+          type: boolean
+      required:
+        - problemId
+        - amount
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        bio:
+          type: string
+        avatarUrl:
+          type: string
+        location:
+          type: string
+        reputationScore:
+          type: integer
+        problemsCreated:
+          type: integer
+        problemsSolved:
+          type: integer
+        totalContributed:
+          type: number
+        joinedAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - reputationScore
+        - problemsCreated
+        - problemsSolved
+        - totalContributed
+        - joinedAt
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        avatarUrl:
+          type: string
+      required:
+        - id
+        - name
+
+    DashboardStats:
+      type: object
+      properties:
+        totalContributions:
+          type: number
+        problemsJoined:
+          type: integer
+        problemsCreated:
+          type: integer
+        reputationScore:
+          type: integer
+        myProblems:
+          type: array
+          items:
+            $ref: "#/components/schemas/Problem"
+        myContributions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contribution"
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+      required:
+        - totalContributions
+        - problemsJoined
+        - problemsCreated
+        - reputationScore
+        - myProblems
+        - myContributions
+        - notifications
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+        type:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+        problemId:
+          type: integer
+      required:
+        - id
+        - message
+        - type
+        - read
+        - createdAt
+
+    CommunityGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        memberCount:
+          type: integer
+        problemCount:
+          type: integer
+        category:
+          type: string
+        imageUrl:
+          type: string
+        active:
+          type: boolean
+        isMember:
+          type: boolean
+      required:
+        - id
+        - name
+        - description
+        - memberCount
+        - problemCount
+        - category
+        - active
+
+    MembershipResult:
+      type: object
+      properties:
+        joined:
+          type: boolean
+        alreadyMember:
+          type: boolean
+        wasMember:
+          type: boolean
+      required:
+        - joined
+
+    CommunityTask:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        assignedTo:
+          type: string
+        assignedToAvatar:
+          type: string
+        problemId:
+          type: integer
+        problemTitle:
+          type: string
+        status:
+          type: string
+          enum: [pending, in_progress, done]
+        dueDate:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - status
+
+    CommunityMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        communityId:
+          type: integer
+        userId:
+          type: integer
+        userName:
+          type: string
+        userAvatar:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - communityId
+        - userId
+        - userName
+        - message
+        - createdAt
+
+    OverviewStats:
+      type: object
+      properties:
+        totalProblems:
+          type: integer
+        problemsSolved:
+          type: integer
+        totalFundingRaised:
+          type: number
+        activeCommunities:
+          type: integer
+        volunteersJoined:
+          type: integer
+      required:
+        - totalProblems
+        - problemsSolved
+        - totalFundingRaised
+        - activeCommunities
+        - volunteersJoined
+
+    VoteBody:
+      type: object
+      properties:
+        vote:
+          type: string
+          enum: [verify, dispute]
+      required:
+        - vote
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message

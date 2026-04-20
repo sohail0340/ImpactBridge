@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "7OO5PTXFf478HutF8lii_"
+uri = "file://artifacts/impact-bridge/src/assets/hero-community.png"
+type = "image"
+title = "hero community impact"

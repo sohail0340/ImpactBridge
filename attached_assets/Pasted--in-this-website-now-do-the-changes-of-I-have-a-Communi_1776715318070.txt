@@ -1,0 +1,85 @@
+
+
+in this website now do the changes of
+
+I have a Community page where current community names and descriptions are weak dummy placeholders (like Bangalore Roads Watch, Safe Water Alliance, etc).
+
+I want you to completely replace them and generate MUCH BETTER, more premium, realistic, high-quality communities that feel like a real funded startup product.
+
+Generate 5 outstanding communities.
+
+For EACH community provide:
+
+1. Community Name (powerful, memorable, modern, credible)
+2. One-line mission statement
+3. Detailed description (2-3 sentences)
+4. Category tag (Roads, Water, Waste, Education, Public Safety, Environment, Energy, Civic Rights, etc)
+5. Members count (realistic numbers)
+6. Active problems count
+7. Join button text
+8. Community chat intro message
+9. 5 realistic community tasks related to that community:
+   - task title
+   - short task description
+   - assigned member name
+   - task status (Done / In Progress / Pending)
+
+Important:
+Community names should feel exceptional, examples of quality level:
+- UrbanPulse Collective
+- CivicFlow Network
+- StreetShield Alliance
+- WaterGuard Initiative
+
+Do NOT generate boring NGO-style names.
+Do NOT use generic names like “Road Watch Group”.
+
+Make names feel premium, modern, startup-like, mission-driven.
+
+Mix problem domains:
+- road infrastructure
+- water access
+- drainage/sewage
+- public schools
+- waste management
+- climate resilience
+- neighborhood safety
+- women safety
+- public transport
+- energy access
+
+Also generate communities with different vibes:
+- some activist style
+- some citizen-led
+- some data-driven
+- some volunteer-driven
+
+Make descriptions sound like real communities with real impact.
+
+Also improve the left sidebar community list so every community looks unique and impressive.
+
+Output in structured JSON format like this:
+
+{
+communityName:"",
+mission:"",
+description:"",
+category:"",
+members:"",
+problems:"",
+joinCTA:"",
+chatIntro:"",
+tasks:[
+{
+title:"",
+description:"",
+assignee:"",
+status:""
+}
+]
+}
+
+Generate all 5.
+Make it hackathon-winning quality.
+
+also the community name description and all are controled thorugh admin paneel
