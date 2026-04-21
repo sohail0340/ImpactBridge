@@ -1,8 +1,9 @@
 import { getToken } from "./api";
 
-const API_BASE = `${import.meta.env.BASE_URL}api`
-  .replace(/\/+$/, "")
-  .replace(/\/api\/api$/, "/api");
+const VITE_API_URL = import.meta.env.VITE_API_URL as string | undefined;
+const API_BASE = VITE_API_URL
+  ? `${VITE_API_URL.replace(/\/+$/, "")}/api`
+  : `${import.meta.env.BASE_URL}api`.replace(/\/+$/, "").replace(/\/api\/api$/, "/api");
 
 export async function uploadImage(file: File): Promise<{ url: string; filename: string; size: number }> {
   const token = getToken();
