@@ -1,4 +1,8 @@
-const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/+$/, "").replace(/\/api\/api$/, "/api");
+// If VITE_API_URL is set (e.g. on Vercel), use it as the absolute API origin.
+// Otherwise fall back to the same-origin path-based prefix used on Replit.
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)
+  ? `${(import.meta.env.VITE_API_URL as string).replace(/\/+$/, "")}/api`
+  : `${import.meta.env.BASE_URL}api`.replace(/\/+$/, "").replace(/\/api\/api$/, "/api");
 
 const TOKEN_KEY = "impactbridge:token";
 
