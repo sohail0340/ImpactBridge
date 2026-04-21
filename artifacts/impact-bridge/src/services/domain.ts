@@ -325,7 +325,10 @@ export async function uploadImage(file: File): Promise<string> {
   const token = getToken();
   const fd = new FormData();
   fd.append("file", file);
-  const base = `${import.meta.env.BASE_URL}api`.replace(/\/+$/, "").replace(/\/api\/api$/, "/api");
+  const viteApi = import.meta.env.VITE_API_URL as string | undefined;
+  const base = viteApi
+    ? `${viteApi.replace(/\/+$/, "")}/api`
+    : `${import.meta.env.BASE_URL}api`.replace(/\/+$/, "").replace(/\/api\/api$/, "/api");
   const res = await fetch(`${base}/uploads/image`, {
     method: "POST",
     body: fd,
